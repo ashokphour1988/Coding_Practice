@@ -1,0 +1,58 @@
+#include <iostream>
+using namespace std;
+ 
+class Solution {
+public:
+    string longestPalindrome(string s) {
+ 
+        int i,len1,len2,len,prevlen=0;
+        int start=0,end1=0;
+        int slen = s.size();
+ 
+        if(s.empty() || s.length() < 1)
+            return "";
+ 
+        for(i=0;i<slen-1;i++){
+        	cout <<"_____ 1 ______i = "<<i<<'\n';
+            //len1 = expandfrommiddle(s,i,i); /*expand from same index for odd string*/
+            cout <<"_____ 2 ______i = "<<i<<'\n';
+            //len2 = expandfrommiddle(s,i,i+1);/*expand from middle 2 elmnts for even string*/
+            //cout <<"_____ 3 ______i = "<<i<<'\n';
+            len = max(len1,len2);
+            //cout <<"len= "<< len << "\tstart= "<<start << "\tend1= "<< end1<<'\n';
+            if(len > (end1-start)&& len != prevlen){
+ 
+                start = i - (len-1)/2;
+                end1 = i + (len)/2;
+            }
+		prevlen = len; 
+        }
+ 
+        return s.substr(start,(end1-start)+1);
+    }
+ 
+    int expandfrommiddle(string s,int left, int right){
+        if(left>right)
+            return 0;
+ 
+ 
+        while(left >=0 && right<s.length() && s[left] == s[right] ){
+        	//cout << "left= "<<left<<"\tRight= "<<right; 
+        	//cout <<"\t"<< s[left] << '\t' << s[right] << '\n';
+            left--;
+            right++;
+        }
+        cout << "left= "<<left<<"\tRight= "<<right<<'\n'; 
+        return right-left-1;
+    }
+};
+ 
+int main() {
+	// your code goes here
+	//string s="cbbd";
+	string s = "forgeeksskeegfor";
+	//string s = "babad";
+	Solution sol;
+	cout << "string=  " << sol.longestPalindrome(s)<<'\n';
+	return 0;
+}

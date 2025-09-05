@@ -1,0 +1,32 @@
+class Solution {
+public:
+   
+    int nthUglyNumber(int n) {
+        int i=1;
+        int count = 1;
+        
+        while(count<n){
+            i++;
+            if(isUgly(i)){
+                count++;
+            }
+        }
+            return i;
+    }
+    
+    int isUgly(int n){
+        n = maxDivisor(n,2);
+        n = maxDivisor(n,3);
+        n = maxDivisor(n,5);
+        
+        return (n==1)?1:0;
+    }
+    
+    int maxDivisor(int n, int pf){
+        
+        while(n%pf == 0){
+            n = n/pf;
+        }
+        return n;
+    }
+};

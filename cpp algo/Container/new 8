@@ -1,0 +1,25 @@
+value inserted to vector
+0	1	5	
+-2	-1	2	1
+[  -2 -1 2 1 ]
+
+Success #stdin #stdout 0s 5548KB
+value inserted to vector
+0	1	5	
+-2	-1	2	1
+value inserted to vector
+0	2	5	
+-2	-1	2	1
+value inserted to vector
+1	2	4	
+-1	-1	1	1
+[  -2 -1 2 1 ]
+[  -2 -1 2 1 ]
+[  -1 -1 1 1 ]
+
+
+
+[1000000000, 1000000000, 1000000000, 1000000000]
+0
+
+1000000000

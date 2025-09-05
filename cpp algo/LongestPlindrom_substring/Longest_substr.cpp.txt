@@ -1,0 +1,41 @@
+class Solution {
+public:
+    string longestPalindrome(string s) {
+
+        int i,len1,len2,len,prevlen=0;
+        int start=0,end=0;
+        int slen = s.size();
+        
+        if(s.empty() || s.length() < 1)
+            return "";
+            
+        for(i=0;i<slen-1;i++){
+            len1 = expandfrommiddle(s,i,i); /*expand from same index for odd string*/
+            len2 = expandfrommiddle(s,i,i+1);/*expand from middle 2 elmnts for even string*/
+            
+            len = max(len1,len2);
+            
+            if(len > (end-start) && len != prevlen ){
+			
+            /*   forgeeksskeeg i=7 and len=10 for geeksskeeg when loop break left= 2	Right= 13 so return value is return 13-2-1 (right-left-1)  */
+                start = i - (len-1)/2;  /* need to go back few steps (len-1)/2 from current index as pointer on current index so reducing 1 from len to go to starting index of plindrom string.*/
+                end = i + len/2;		/* exact end index of the find substring string */
+            }
+            prevlen  = len;
+        }
+        /*need to pass start idx and string length, diff between starting and end indx of string is 12-3= 9 but string length is 10 so adding 1*/
+        return s.substr(start,(end-start)+1); 
+    }
+    
+    int expandfrommiddle(string s,int left, int right){
+        if(left>right)
+            return 0;
+        
+        
+        while(left >=0 && right<s.length() && s[left] == s[right] ){
+            left--;
+            right++;
+        }
+        return right-left-1;
+    }
+};

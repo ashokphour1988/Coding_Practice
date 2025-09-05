@@ -1,0 +1,138 @@
+#############################################################  MAP  #################################################################
+
+Map is used to store key value pair.
+
+
+map<int, int> map;    : declaration
+if(map.find(target - nums[i]) != map.end())  :   find a specific key existing, if existing then return iterator of that key else return
+map.insert(pair<int, int>(nums[i], i));      :   insert map with pair object
+
+map.find(target - nums[i])->second :  return the value for that map, ->first will return key.
+
+map.erase(compliment) :  erase single element.
+
+for (std::map<char,int>::iterator it=mymap.begin(); it!=mymap.end(); ++it)
+    std::cout << it->first << " => " << it->second << '\n';
+
+Similarity between SET and MAP
+set and map in STL are similar in the sense that they both use Red Black Tree (A self balancing BST). Note that the time complexities of search, insert and delete are O(Log n). 
+
+######################################################### Vector ######################################################################
+if vector all elements are zero:   bool zeros = std::all_of(nums.begin(), nums.end(), [](int i) { return i==0; });
+
+if(i == 1 && j==2){
+	cout<<i<<"\t"<<j<<"\t"<<k<<"\t"<<"\n";
+	cout<<nums[i]<<"\t"<<nums[j]<<"\t"<<nums[k]<<"\t"<<target-sum<<"\n";
+	unordered_set<int>::iterator it;
+
+	for (it = set.begin(); it != set.end(); it++){
+	cout<<*it<<"\n";
+}
+
+vector<int> result;
+push_back(map.find(target - nums[i])->second)
+
+
+vector<int>::iterator col;
+    cout<<"______________ 1 _________________________\n";
+    for (col = vec.begin(); col != vec.end(); col++) {
+        cout<<*col<<"\n";
+    }
+
+                        vector< vector<int> >::iterator row;
+	                    vector<int>::iterator col;
+                        for (row = vvi.begin(); row != vvi.end(); row++) {
+                            for (col = row->begin(); col != row->end(); col++) {
+    	                        if(*col == x){
+                                    
+                                }
+    	                    }
+                        }
+
+						vector<vector<int>> temp;
+                        temp.push_back(nums[i] );
+                        temp.push_back(x);
+                        temp.push_back(nums[j]);
+                        vector< vector<int> >::iterator row;
+                        for (row = output.begin(); row != output.end(); row++) {
+                            bool result = std::equal(row.begin(), row.end(),temp.begin());
+                        }
+                        if(!result){
+                            output.push_back({nums[i],x,nums[j]});
+                        }
+
+vector<int>& ar,int sum)
+
+    // sort input array
+    sort(ar.begin(), ar.end());
+ 
+    // remove duplicates
+    ar.erase(unique(ar.begin(), ar.end()), ar.end());
+	
+########    removeing duplicate elements of vector   #############################
+
+
+vector<int>::iterator ip;
+ip = unique(nums.begin(), nums.end());
+nums.resize(distance(nums.begin(), ip));
+
+##############################################################  set  ##########################################################################
+Set is used to store only key not value;
+
+Similarity between SET and MAP
+set and map in STL are similar in the sense that they both use Red Black Tree (A self balancing BST). 
+Time complexities of search, insert and delete are O(Log n). 
+
+Variations of set and map: 
+Set and Map, both stores unique values and sorted values as well. But If we don’t have such a requirement, we use multiset/multimap and unordered_set/unordered_map. 
+Multimap: Multimap doesn’t allow elements to stored by indexing. 
+
+// CPP program to demonstrate working of Multimap
+#include <bits/stdc++.h>
+using namespace std;
+ 
+int main()
+{
+    multimap<int, int> m;
+ 
+    m.insert({ 1, 2 });
+    m.insert({ 2, 3 });
+    m.insert({ 4, 5 });
+    m.insert({ 2, 3 });
+    m.insert({ 1, 2 });
+ 
+    cout << "Elements in Multimap:\n";
+    for (auto it : m)
+        cout << "[ " << it.first << ", "
+             << it.second << "]\n"; // Sorted
+ 
+    return 0;
+}
+
+output:
+
+Elements in Multimap:
+[ 1, 2]
+[ 1, 2]
+[ 2, 3]
+[ 2, 3]
+[ 4, 5]
+
+MultiSet : 
+
+multiset<int> ms;
+ 
+    ms.insert(1);
+    ms.insert(3);
+    ms.insert(4);
+    ms.insert(2);
+    ms.insert(2);
+
+Elements in Multiset:
+1 2 2 3 4
+
+####################################################################################################################################
+
+if i will insert the value again on same key in map will it be update in cpp
+
+Yes, in C++, if you insert a value into a std::map using the subscript operator [] with a key that already exists, the value will be updated.
