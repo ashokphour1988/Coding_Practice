@@ -1,0 +1,24 @@
+class Solution {
+public:
+    int numberOfZero(int left, int right) {
+         int c2 = 0, c5 = 0;
+         for(int i = left; i <= right; i++)
+         {
+             int a = i;
+             
+             while((a%2) == 0 )
+             {
+                 a = a/2;
+                 c2++;
+             }
+             
+             while(a% 5 == 0)
+             {
+                 a = a/5;
+                 c5++;
+             }
+         }
+
+         return (c2 < c5)? c2 : c5;
+    }
+};

@@ -1,0 +1,86 @@
+//To send a message with a message ID in a message queue using the msgsnd function in C, you need to define a structure that includes a message type and the message data. The message type can act as the message ID. Here’s a step-by-step example:
+
+//Include the necessary headers:
+#include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/msg.h>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+
+//Define the message structure:
+struct message {
+    long msg_type; // Message type (ID)
+    char msg_text[100]; // Message data
+};
+
+//Create and send a message:
+int main() {
+    key_t key;
+    int msgid;
+    struct message msg;
+
+    // Generate a unique key
+    key = ftok("progfile", 65);
+
+    // Create a message queue and return identifier
+    msgid = msgget(key, 0666 | IPC_CREAT);
+    if (msgid == -1) {
+        perror("msgget");
+        exit(1);
+    }
+
+    // Prepare the message
+    msg.msg_type = 1; // Message ID
+    strcpy(msg.msg_text, "Hello, this is a test message");
+
+    // Send the message
+    if (msgsnd(msgid, &msg, sizeof(msg.msg_text), 0) == -1) {
+        perror("msgsnd");
+        exit(1);
+    }
+
+    printf("Message sent: %s\n", msg.msg_text);
+
+    return 0;
+}
+
+//Receive the message:
+int main() {
+    key_t key;
+    int msgid;
+    struct message msg;
+
+    // Generate a unique key
+    key = ftok("progfile", 65);
+
+    // Get the message queue identifier
+    msgid = msgget(key, 0666 | IPC_CREAT);
+    if (msgid == -1) {
+        perror("msgget");
+        exit(1);
+    }
+
+    // Receive the message
+    if (msgrcv(msgid, &msg, sizeof(msg.msg_text), 1, 0) == -1) {
+        perror("msgrcv");
+        exit(1);
+    }
+
+    printf("Message received: %s\n", msg.msg_text);
+
+    // Destroy the message queue
+    msgctl(msgid, IPC_RMID, NULL);
+
+    return 0;
+}
+
+/*
+Explanation:
+Message Structure: The struct message includes a msg_type field, which acts as the message ID, and a msg_text field for the message data.
+Message Type: The msg_type field is used to identify the message. When sending and receiving messages, you can specify this type to filter messages.
+Sending and Receiving: The msgsnd function sends the message, and the msgrcv function receives it based on the message type.
+Important Considerations:
+Unique Key: Use ftok to generate a unique key for the message queue.
+Error Handling: Always check the return values of system calls for errors and handle them appropriately.
+*/

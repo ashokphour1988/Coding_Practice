@@ -1,0 +1,69 @@
+/**
+ * Definition for singly-linked list.
+ * struct ListNode {
+ *     int val;
+ *     struct ListNode *next;
+ * };
+ */
+
+
+struct ListNode* listDuplication(struct ListNode* head){
+    struct ListNode* ret = head;
+    while(head != NULL){
+        struct ListNode* newNode = malloc(sizeof (struct ListNode));
+        newNode->next=head->next;
+        newNode->val = head->val;
+        head->next = newNode;
+        head = newNode->next;
+    }
+    return ret;
+
+}
+
+
+class TruckQueue {
+public:
+mutex gMutex;
+condition_variable gCV;
+    int curNum;
+    int n;
+    TruckQueue(int n) {
+        curNum = 0;
+        this->n = n;
+    }
+
+    void enterWaitingArea(function<void()> leavingWaitingArea, int index) {
+        while (curNum != index - 1) {
+            unique_lock<mutex> mLock(gMutex);
+            gCV.wait(mLock);
+        }
+        // Do not change or remove this line.
+        leavingWaitingArea();
+        curNum++;
+        gCV.notify_all();
+    }
+};
+
+
+
+class Solution {
+public:
+    int numberOfZero(int left, int right) {
+        long now = left, ans = 0;
+        for (int i = left + 1 ; i <= right ; i++) {
+            if (now > 1000000) now %= 1000000;
+            now *= i;
+            while (now % 10 == 0) {
+                ans++;
+                now /= 10;
+            }
+        }
+
+            if (now > 1000000) now %= 1000000;
+            while (now % 10 == 0) {
+                ans++;
+                now /= 10;
+            }
+            return ans;
+    }
+};

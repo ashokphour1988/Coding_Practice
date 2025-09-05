@@ -1,0 +1,34 @@
+// Online C compiler to run C program online
+#include <stdio.h>
+ 
+// Function that count set bits
+int countSetBits(int n)
+{
+    int count = 0;
+    while (n > 0) {
+        count++;
+        n &= (n - 1);
+    }
+    return count;
+}
+ 
+// Function that return count of flipped number
+int FlippedCount(int a, int b)
+{
+    // Return count of set bits in a XOR b
+    return countSetBits(a ^ b);
+}
+ 
+// Driver code
+int main()
+{
+    int a = 10;
+    int b = 8;
+   
+      // Function call
+    printf("%d\n", FlippedCount(a, b));
+    return 0;
+}
+
+
+// flipping bits and toggle bits are same.

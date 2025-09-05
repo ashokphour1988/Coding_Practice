@@ -1,0 +1,112 @@
+#include <stdio.h>
+
+/*int count_set_bits(int num){
+    int count=0;
+    int i=0;
+    while(num){
+        if(num&0x01){
+            
+            count++;
+        }
+        printf("__ 12 ___ %d\n",i++);
+        num = num>>1;
+    }
+    return count;
+}*/
+
+int count_set_bits(int num){
+    int count=0;
+    int i=0;
+    while(num){
+        printf("__ 1 ___ %d\n",i++);
+        count++;
+        num = num & (num - 1);
+    }
+    return count;
+}
+
+int count_set_bits(int num)
+{
+	int count=0;
+	while(num){
+		num &= (num-1);
+		count++;
+		printf("____1___\n");
+	}
+	return count;
+}
+
+#include <stdio.h>
+
+union my_un{
+	int reg;
+	struct emb{
+		int a:3;
+		int b:3;
+		int c:2;
+		int d:24;
+	}em;
+}un;
+
+int main(void) {
+	
+	//struct emb em;
+    union my_un un;
+    un.em.a = 3;
+    un.em.b = 7;
+    un.em.c = 3;
+    //int count = count_set_bits(9);
+    //printf("%d\n",em.a);
+    printf("un.reg = %d\n",un.reg);
+    //printf("%d\n",count);
+	
+	return 0;
+}
+
+Example with Anonymous Structures:
+To make it more useful, consider using anonymous structures within the union
+
+union my_un{
+	int reg;
+	struct {
+		int a:3;
+		int b:3;
+		int c:2;
+		int d:24;
+	};
+}un;
+
+int main(void) {
+	
+	//struct emb em;
+    //union my_un un;
+    un.a = 3;
+    un.b = 7;
+    un.c = 3;
+    //int count = count_set_bits(9);
+    //printf("%d\n",em.a);
+    printf("un.reg = %d\n",un.reg);
+    //printf("%d\n",count);
+	
+	return 0;
+}
+
+#define swap_byte(num) num=(num&0xff)<<24|(num>>8&0xff)<<16|(num>>16&0xff)<<8|(num>>24&0xff)
+
+int main() {
+    
+    int num = 0x12345678;
+    
+    /*int a = num & 0xff;
+    int b = num>>8 & 0xff;
+    int c = num>>16 & 0xff;
+    int d = num>>24 & 0xff;*/
+    
+    printf("num = %x\n",num);
+    
+    //num = a<<24|b<<16|c<<8|d;
+    swap_byte(num);
+    printf("num = %x\n",num);
+
+    return 0;
+}

@@ -1,0 +1,144 @@
+struct spi_device {
+	struct device		dev;
+	struct spi_controller	*controller;
+	struct spi_controller	*master;	/* compatibility layer */
+	u32			max_speed_hz;
+	u8			chip_select;
+	u8			bits_per_word;
+	bool			rt;
+	u32			mode;
+	int			irq;
+	void			*controller_state;
+	void			*controller_data;
+	char			modalias[SPI_NAME_SIZE];
+	const char		*driver_override;
+	int			cs_gpio;	/* LEGACY: chip select gpio */
+	struct gpio_desc	*cs_gpiod;	/* chip select gpio desc */
+	
+};
+
+struct spi_driver {
+	const struct spi_device_id *id_table;
+	int			(*probe)(struct spi_device *spi);
+	int			(*remove)(struct spi_device *spi);
+	void			(*shutdown)(struct spi_device *spi);
+	struct device_driver	driver;
+};
+
+struct spi_controller {
+	struct device	dev;
+	struct list_head list;
+	s16			bus_num;
+	u16			num_chipselect;
+	u16			dma_alignment;
+
+	u32			mode_bits;
+	u32			min_speed_hz;
+	u32			max_speed_hz;
+	u16			flags;
+#define SPI_MASTER_GPIO_SS		BIT(5)	/* GPIO CS must select slave */
+	bool			slave;
+	size_t (*max_transfer_size)(struct spi_device *spi);
+	size_t (*max_message_size)(struct spi_device *spi);
+
+	/* I/O mutex */
+	struct mutex		io_mutex;
+	/* lock and mutex for SPI bus locking */
+	spinlock_t		bus_lock_spinlock;
+	struct mutex		bus_lock_mutex;
+
+	/* Setup mode and clock, etc (spi driver may call many times).*/
+	int			(*setup)(struct spi_device *spi);
+	int			(*transfer)(struct spi_device *spi,
+						struct spi_message *mesg)
+	bool				queued;
+	struct kthread_worker		kworker;
+	struct task_struct		*kworker_task;
+	struct kthread_work		pump_messages;
+	spinlock_t			queue_lock;
+	struct list_head		queue;
+	struct spi_message		*cur_msg;
+	bool				idling;
+	bool				busy;
+	bool				running;
+	bool				rt;
+	bool				auto_runtime_pm;
+	bool                            cur_msg_prepared;
+	bool				cur_msg_mapped;
+	struct completion               xfer_completion;
+	size_t				max_dma_len;
+	int (*prepare_transfer_hardware)(struct spi_controller *ctlr);
+	int (*transfer_one_message)(struct spi_controller *ctlr,
+				    struct spi_message *mesg);
+	int (*unprepare_transfer_hardware)(struct spi_controller *ctlr);
+	int (*prepare_message)(struct spi_controller *ctlr,
+			       struct spi_message *message);
+	int (*unprepare_message)(struct spi_controller *ctlr,
+				 struct spi_message *message);
+	int (*slave_abort)(struct spi_controller *ctlr);
+	/*
+	 * These hooks are for drivers that use a generic implementation
+	 * of transfer_one_message() provied by the core.
+	 */
+	void (*set_cs)(struct spi_device *spi, bool enable);
+	int (*transfer_one)(struct spi_controller *ctlr, struct spi_device *spi,
+			    struct spi_transfer *transfer);
+	void (*handle_err)(struct spi_controller *ctlr,
+			   struct spi_message *message);
+
+	/* Optimized handlers for SPI memory-like operations. */
+	const struct spi_controller_mem_ops *mem_ops;
+	/* gpio chip select */
+	int			*cs_gpios;
+	struct gpio_desc	**cs_gpiods;
+	bool			use_gpio_descriptors;
+	/* statistics */
+	struct spi_statistics	statistics;
+	/* DMA channels for use with core dmaengine helpers */
+	struct dma_chan		*dma_tx;
+	struct dma_chan		*dma_rx;
+	/* dummy data for full duplex devices */
+	void			*dummy_rx;
+	void			*dummy_tx;
+	int (*fw_translate_cs)(struct spi_controller *ctlr, unsigned cs);
+};
+
+
+struct spi_transfer {
+	/* it's ok if tx_buf == rx_buf (right?)*/
+	const void	*tx_buf;
+	void		*rx_buf;
+	unsigned	len;
+	dma_addr_t	tx_dma;
+	dma_addr_t	rx_dma;
+	struct sg_table tx_sg;
+	struct sg_table rx_sg;
+	unsigned	cs_change:1;
+	unsigned	tx_nbits:3;
+	unsigned	rx_nbits:3;
+	u8		bits_per_word;
+	u8		word_delay_usecs;
+	u16		delay_usecs;
+	u16		cs_change_delay;
+	u8		cs_change_delay_unit;
+	u32		speed_hz;
+	u16		word_delay;
+	u32		effective_speed_hz;
+	struct list_head transfer_list;
+};
+
+
+struct spi_message {
+	struct list_head	transfers;
+	struct spi_device	*spi;
+	unsigned		is_dma_mapped:1;
+	void			(*complete)(void *context);
+	void			*context;
+	unsigned		frame_length;
+	unsigned		actual_length;
+	int			status;
+	struct list_head	queue;
+	void			*state;
+	/* list of spi_res reources when the spi message is processed */
+	struct list_head        resources;
+};

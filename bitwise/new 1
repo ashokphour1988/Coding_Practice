@@ -1,0 +1,19 @@
+int numberOfZero(int left, int right){
+        unsigned int fact = 1;
+        int i;
+        if(left<0)
+            return 0;
+        for(i = 1; i<= right; i++)
+        {
+            fact = fact*i;
+        }
+        i=0;
+        while (fact!=0)
+        {
+            if((fact & 1) == 1)
+                break;
+            fact = fact>>1;
+            i++;
+        }
+        return i;
+}

@@ -1,0 +1,12 @@
+void mirrorify(node* root, node** mirror)
+{
+    if (root == NULL) {
+        mirror = NULL;
+        return;
+    }
+ 
+    // Create new mirror node from original tree node
+    *mirror = createNode(root->val);
+    mirrorify(root->left, &((*mirror)->right));
+    mirrorify(root->right, &((*mirror)->left));
+}
